@@ -17,6 +17,7 @@ CREATE TABLE docebo.node_tree_names(
     idNode INT NOT NULL,
     language VARCHAR(255),
     nodeName VARCHAR(255),
-    PRIMARY KEY(idNode),
     FOREIGN KEY(idNode) REFERENCES docebo.node_tree(idNode)
 );
+
+

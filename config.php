@@ -1,5 +1,5 @@
 <?php
-class Conectar{
+class Config{
     private $driver;
     private $host, $user, $pass, $database, $charset;
   
