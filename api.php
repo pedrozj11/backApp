@@ -5,24 +5,60 @@ header('Content-Type: application/json');
 
 include_once 'config.php';
 include_once 'model.php';
+include_once 'config/validator.php';
 
 
-// Instantiate blog model object
-$model = new Model();
+$validator = new Validator();
 
-// Blog model query
-$result = $model->read();
-// Get row count
-$num = count($result);
 
-// Check if any results
-if($num > 0) {
+$validator = $validator->check($_GET, array(
+    'node' =>  [
+        'required' => true,
+    ],
+    'language' => [
+        'required' => true,
+        'enum' => [
+            'italian',
+            'english'
+        ],
+    ]
+));
 
-  echo json_encode($result);
+if ($validator->getPassed()) {
 
+
+    $num = 0;
+    $size = 100;
+
+    if (isset($_GET['page_num'])) {
+        $num = $_GET['page_num'];
+    }
+
+    if (isset($_GET['page_size'])) {
+        $size = $_GET['page_size'];
+    }
+
+
+    // Instantiate blog model object
+    $model = new Model($num, $size);
+
+    // Blog model query
+    $result = $model->read();
+    // Get row count
+    $num = count($result);
+
+    // Check if any results
+    if ($num > 0) {
+
+        echo json_encode($result);
+    } else {
+        // No results
+        echo json_encode(
+            array('message' => 'No results')
+        );
+    }
 } else {
-  // No results
-  echo json_encode(
-    array('message' => 'No results')
-  );
+    echo json_encode(
+        array('422' => 'Not Valid arguments')
+    );
 }

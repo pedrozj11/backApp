@@ -6,8 +6,9 @@ class Model
     private $db;
     private $conectar;
 
+
     // Constructor with DB
-    public function __construct()
+    public function __construct($page_num, $page_size)
     {
         $this->table = 'node_tree_names';
         require_once 'config.php';
@@ -21,7 +22,7 @@ class Model
 
         // Create query
         $query = $this->db->query("SELECT * FROM $this->table");
-        print_r($query);
+        // print_r($query);
         while ($row = $query->fetch_object()) {
             $resultSet[] = $row;
         }
