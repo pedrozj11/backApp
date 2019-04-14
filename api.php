@@ -14,6 +14,8 @@ $validator = new Validator();
 $validator = $validator->check($_GET, array(
     'node' =>  [
         'required' => true,
+        'min' => 1,
+        'max' => 12
     ],
     'language' => [
         'required' => true,
@@ -21,7 +23,17 @@ $validator = $validator->check($_GET, array(
             'italian',
             'english'
         ],
-    ]
+    ],
+    'page_num' => [
+        'numeric' => true,
+        'min' => 0
+    ],
+
+    'page_size' => [
+        'numeric' => true,
+        'min' => 0,
+        'max' => 1000
+    ],
 ));
 
 if ($validator->getPassed()) {
@@ -63,6 +75,6 @@ if ($validator->getPassed()) {
     }
 } else {
     echo json_encode(
-        array('422' => 'Not Valid arguments')
+        $validator->getErrors(),
     );
 }
