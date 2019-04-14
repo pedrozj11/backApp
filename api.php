@@ -29,7 +29,7 @@ if ($validator->getPassed()) {
 
     $num = 0;
     $size = 100;
-
+    $filter = '';
     if (isset($_GET['page_num'])) {
         $num = $_GET['page_num'];
     }
@@ -38,12 +38,16 @@ if ($validator->getPassed()) {
         $size = $_GET['page_size'];
     }
 
+    if (isset($_GET['filter'])) {
+        $filter = $_GET['filter'];
+    }
+
 
     // Instantiate blog model object
-    $model = new Model($num, $size);
+    $model = new Model();
 
     // Blog model query
-    $result = $model->read();
+    $result = $model->read($_GET['node'], $_GET['language'], $num, $size, $filter);
     // Get row count
     $num = count($result);
 
