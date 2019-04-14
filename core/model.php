@@ -20,6 +20,9 @@ class Model
     // Get Nodes
     public function read($idNode, $language, $p_num, $p_size, $filter)
     {
+        // Escaping the filter to avoid sql injection
+        $filter = $this->db->real_escape_string($filter);
+
         $offset = $p_num * $p_size;
         // Create paginated query
         if ($filter != '') {

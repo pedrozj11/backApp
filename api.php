@@ -23,7 +23,7 @@ $validator = $validator->check($_GET, array(
             'italian',
             'english'
         ],
-    ],
+    ], 
     'page_num' => [
         'numeric' => true,
         'min' => 0
