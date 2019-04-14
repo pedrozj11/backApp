@@ -11,7 +11,7 @@ class Validator
                 $value = $source[$item];
                 if ($rule === 'required' && $value == null) {
                     $this->addError($item, "{$item} is required");
-                } else if (!empty($value)) {
+                } else if ($value!=null) {
                     switch ($rule) {
                         case 'numeric':
                         if (!is_numeric($value)) {

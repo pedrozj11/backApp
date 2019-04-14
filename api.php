@@ -3,9 +3,9 @@
 header('Access-Control-Allow-Origin: *');
 header('Content-Type: application/json');
 
-include_once 'config.php';
-include_once 'model.php';
-include_once 'config/validator.php';
+include_once 'core/config.php';
+include_once 'core/model.php';
+include_once 'core/validator.php';
 
 
 $validator = new Validator();
