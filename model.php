@@ -1,4 +1,5 @@
 <?php
+
 class Model
 {
     // DB stuff
@@ -19,8 +20,8 @@ class Model
     // Get Nodes
     public function read($idNode, $language, $p_num, $p_size, $filter)
     {
-
-        // Create query
+        $offset = $p_num * $p_size;
+        // Create paginated query
         $query = $this->db->query("SELECT datas.idNode ,datas.nodeName, (
             SELECT COUNT(*)
             FROM node_tree AS node,
@@ -36,11 +37,44 @@ class Model
         AND parent.idNode = $idNode
         AND node.idNode = datas.idNode
         AND datas.language = '$language'
-        ORDER BY node.iLeft;");
-        //print_r($query);
+        ORDER BY node.iLeft
+        LIMIT $offset, $p_size ");
+
+        $resultSet =  [
+            'data' => [],
+            'pages' => [],
+        ];
+
         while ($row = $query->fetch_object()) {
-            $resultSet[] = $row;
+            
+            array_push($resultSet['data'], $row);
         }
+
+        // Pagination
+
+
+        // Query to get total of results without pagination
+        $arrTotalPages = $this->db->query("SELECT COUNT(*) as cont
+            FROM node_tree AS node,
+                node_tree AS parent,
+                node_tree_names AS datas
+            WHERE node.iLeft BETWEEN parent.iLeft AND parent.iRight
+            AND parent.idNode= $idNode 
+            AND datas.language = '$language'
+            AND node.idNode = datas.idNode
+        ");
+        
+        $intTotalPages = ceil($arrTotalPages->fetch_assoc()['cont'] / $p_size);
+        
+        
+        // Writing links
+
+        for ($i = 0; $i < $intTotalPages; $i++) {
+            $resultSet['pages'][] =  'http://localhost/backApp/api.php?node=' . $idNode . '&language=' . $language . '&page_size=' . $p_size . '&page_num=' .  $i  ;
+            //$resultSet['links'][] =  "<a href='?page=" . $i . "'>[" . $i . "]</a>&bsp;";
+        }
+
+         $resultSet['pages'] = (object)  $resultSet['pages'];
 
         return $resultSet;
     }
